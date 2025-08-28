@@ -1,7 +1,7 @@
 {
   "name": "@mapcatch/text2polygon",
   "private": false,
-  "version": "0.0.01",
+  "version": "0.0.02",
   "author": "songshiwang",
   "license": "MIT",
   "main": "./src/index.js",

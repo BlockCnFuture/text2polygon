@@ -1,24 +1,35 @@
 import opentype from 'opentype.js'
 
 /**
- * 将文本转换为 GeoJSON Polygon Collection
+ * 加载字体
  * @param {string} fontPath - 字体文件
+ * @returns {Promise<opentype.Font>} - 返回 opentype 字体结构
+ */
+export async function loadFont(fontPath) {
+    return await opentype.load(fontPath)
+}
+
+/**
+ * 将文本转换为 GeoJSON Polygon Collection
+ * @param {opentype.Font} fontInstance - opentype 字体实例
  * @param {string} text - 需要转换的文本
  * @param {[number, number]} [center=[0,0]] - 文本整体中心位置，[x, y]
  * @param {number} [fontSize=0.01] - 字体大小，单位米
  * @param {Object} [properties={}] - 每个 Feature 的附加属性
  * @returns {Promise<GeoJSON.FeatureCollection>} - 返回 GeoJSON FeatureCollection
  */
-export async function text2PolygonFeature(fontPath, text, center = [0, 0], fontSize = 12, properties = {}) {
-    let font = await opentype.load(fontPath)
-    let glyphs = font.stringToGlyphs(text)
+export function text2PolygonFeature(fontInstance, text, center = [0, 0], fontSize = 12, properties = {}) {
+
+    if (!(fontInstance instanceof opentype.Font)) throw new Error('wrong fontInstance')
+
+    let glyphs = fontInstance.stringToGlyphs(text)
     let features = []
     let x = 0
     let segments = 10
     let allPoints = []
 
     // 1纬度约 111320米
-    let scale = fontSize / 111320 / font.unitsPerEm
+    let scale = fontSize / 111320 / fontInstance.unitsPerEm
 
     function sampleQuadratic(p0, p1, p2) {
         let pts = []
@@ -52,7 +63,7 @@ export async function text2PolygonFeature(fontPath, text, center = [0, 0], fontS
     }
 
     for (let glyph of glyphs) {
-        let path = glyph.getPath(x, 0, font.unitsPerEm * scale)
+        let path = glyph.getPath(x, 0, fontInstance.unitsPerEm * scale)
         let subPaths = []
         let currentPath = []
 
