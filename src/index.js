@@ -1,11 +1,11 @@
-import opentype from 'opentype.js'
+const opentype = require('opentype.js')
 
 /**
  * 加载字体
  * @param {string} fontPath - 字体文件
  * @returns {Promise<opentype.Font>} - 返回 opentype 字体结构
  */
-export async function loadFont(fontPath) {
+async function loadFont(fontPath) {
     return await opentype.load(fontPath)
 }
 
@@ -14,11 +14,11 @@ export async function loadFont(fontPath) {
  * @param {opentype.Font} fontInstance - opentype 字体实例
  * @param {string} text - 需要转换的文本
  * @param {[number, number]} [center=[0,0]] - 文本整体中心位置，[x, y]
- * @param {number} [fontSize=0.01] - 字体大小，单位米
+ * @param {number} [textHeight=4] - 文字高度
  * @param {Object} [properties={}] - 每个 Feature 的附加属性
  * @returns {Promise<GeoJSON.FeatureCollection>} - 返回 GeoJSON FeatureCollection
  */
-export function text2PolygonFeature(fontInstance, text, center = [0, 0], fontSize = 12, properties = {}) {
+function text2PolygonFeature(fontInstance, text, center = [0, 0], textHeight = 4, properties = {}) {
 
     if (!(fontInstance instanceof opentype.Font)) throw new Error('wrong fontInstance')
 
@@ -28,8 +28,7 @@ export function text2PolygonFeature(fontInstance, text, center = [0, 0], fontSiz
     let segments = 10
     let allPoints = []
 
-    // 1纬度约 111320米
-    let scale = fontSize / 111320 / fontInstance.unitsPerEm
+    let scale = textHeight / fontInstance.unitsPerEm
 
     function sampleQuadratic(p0, p1, p2) {
         let pts = []
@@ -124,3 +123,5 @@ export function text2PolygonFeature(fontInstance, text, center = [0, 0], fontSiz
 
     return { type: 'FeatureCollection', features }
 }
+
+module.exports = { loadFont, text2PolygonFeature }
