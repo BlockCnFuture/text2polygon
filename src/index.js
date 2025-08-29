@@ -10,7 +10,7 @@ async function loadFont(fontPath) {
 }
 
 /**
- * 将文本转换为 GeoJSON Polygon Collection
+ * 将文本转换为 GeoJSON Polygon Collection （绘制性能不佳）
  * @param {opentype.Font} fontInstance - opentype 字体实例
  * @param {string} text - 需要转换的文本
  * @param {[number, number]} [center=[0,0]] - 文本整体中心位置，[x, y]

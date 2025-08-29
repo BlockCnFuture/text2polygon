@@ -7,6 +7,8 @@ loadFont(path.join(__dirname, './MalgunGothicRegular.ttf')).then(font => {
 })
 console.log('\r\n\r\n\r\n')
 loadFont(path.join(__dirname, './微软雅黑.ttf')).then(font => {
-    const res = text2PolygonFeature(font, '欧 洲小镇', [114.3642124, 30.512943])
+    const res = text2PolygonFeature(font, '管高建组程雷接', [114.3642124, 30.512943])
     console.log(JSON.stringify(res))
 })
+
+// https://geojson.io/#map=4.3/39.38/116.79
